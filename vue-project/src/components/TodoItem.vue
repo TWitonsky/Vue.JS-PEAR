@@ -12,7 +12,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(["edit-todo", "update-todo"]);
+defineEmits(["edit-todo", "update-todo", "toggle-complete", "delete-todo"]);
 </script>
 
 <template>
@@ -27,9 +27,7 @@ defineEmits(["edit-todo", "update-todo"]);
       :value="todo.todo"
       @input="$emit('update-todo', $event.target.value, index)"
       />
-      <span v-else
-        :class="{'completed-todo': todo.isCompleted,}"
-      >
+      <span v-else :class="{'completed-todo': todo.isCompleted,}">
         {{ todo.todo }}
       </span>
     </div>
@@ -50,7 +48,13 @@ defineEmits(["edit-todo", "update-todo"]);
         width="22"
         @click="$emit('edit-todo', index)"
       />
-      <Icon icon="ph:trash" class="icon trash-icon" color="f95e5e" width="22" />
+      <Icon 
+        icon="ph:trash"
+        class="icon trash-icon"
+        color="f95e5e"
+        width="22"
+        @click="$emit('delete-todo', todo)"
+      />
     </div>
   </li>
 </template>
@@ -70,6 +74,7 @@ li {
       opacity: 1;
     }
   }
+
   input[type="checkbox"] {
     appearance: none;
     width: 20px;
@@ -84,6 +89,9 @@ li {
   }
   .todo {
     flex: 1;
+    .completed-todo {
+      text-decoration: line-through;
+    }
 
     input[type="text"] {
       width: 100%;

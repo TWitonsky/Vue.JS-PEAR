@@ -24,6 +24,14 @@ const toggleEditTodo = (todoPos) => {
 const updateTodo = (todoVal, todoPos) => {
   todoList.value[todoPos].todo = todoVal;
 };
+const toggleTodoComplete = (todoPos) => {
+  todoList.value[todoPos].isCompleted = !todoList.value[todoPos].isCompleted;
+};
+const deleteTodo = (todo) => {
+  todoList.value = todoList.value.filter(
+    (todoFilter) => todoFilter.id !== todo.id
+  );
+};
 </script>
 
 <template>
@@ -34,8 +42,11 @@ const updateTodo = (todoVal, todoPos) => {
       <TodoItem v-for="(todo, index) in todoList" 
       :todo="todo" 
       :index="index"
+      @toggle-complete="toggleTodoComplete"
       @edit-todo="toggleEditTodo"
-      @update-todo="updateTodo"/>
+      @update-todo="updateTodo"
+      @delete-todo="deleteTodo"
+      />
     </ul>
     <p v-else class="todos-msg">
       <Icon icon="noto-v1:sad-but-relieved-face" />
