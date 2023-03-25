@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { uid } from 'uid';
+import { Icon } from "@iconify/vue";
 import ToDoCreater from '../components/ToDoCreater.vue';
 import TodoItem from '../components/TodoItem.vue';
 
@@ -16,15 +17,30 @@ const createTodo = (todo) => {
     isEditing: null,
   });
 };
+
+const toggleEditTodo = (todoPos) => {
+  todoList.value[todoPos].isEditing = !todoList.value[todoPos].isEditing;
+};
+const updateTodo = (todoVal, todoPos) => {
+  todoList.value[todoPos].todo = todoVal;
+};
 </script>
 
 <template>
   <main>
     <h1>Create To Do</h1>
     <ToDoCreater @create-todo="createTodo"/>
-    <ul>
-      <TodoItem v-for="todo in todoList"/>
+    <ul class="todo-list" v-if="todoList.length > 0">
+      <TodoItem v-for="(todo, index) in todoList" 
+      :todo="todo" 
+      :index="index"
+      @edit-todo="toggleEditTodo"
+      @update-todo="updateTodo"/>
     </ul>
+    <p v-else class="todos-msg">
+      <Icon icon="noto-v1:sad-but-relieved-face" />
+      <span>You have no todo's to complete! Add one!</span>
+    </p>
   </main>
 </template>
 
@@ -40,6 +56,21 @@ main {
   h1 {
     margin-bottom: 16px;
     text-align: center;
+  }
+
+  .todo-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin-top: 24px;
+    gap: 20px;
+  }
+  .todos-msg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
   }
 }
 </style>
